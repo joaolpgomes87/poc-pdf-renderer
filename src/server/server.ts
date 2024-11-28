@@ -8,20 +8,14 @@ const pdfService = new PdfService();
 
 app.use(cors({
   origin: 'http://localhost:4200',
-  credentials: true
+  credentials: false
 }));
 
 app.use(express.json());
 
-app.use('/api', (req, res, next) => {
-  console.log('API request received:', req.method, req.url);
-  next();
-});
-
 app.post('/api/preview-pdf', async (req, res) => {
   try {
     const transcript = req.body as Transcript;
-    console.log('Received transcript data:', transcript);
     
     const pdfBuffer = await pdfService.generatePdf(transcript);
     

@@ -22,16 +22,17 @@ export class PdfService {
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-gpu',
-          '--disable-extensions'
+          '--disable-extensions',
+          '--headless'
         ]
       });
 
       const page = await browser.newPage();
       
-      // Optimize page performance
+      // Block ALL resource requests except document
       await page.setRequestInterception(true);
       page.on('request', (request) => {
-        if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+        if (request.resourceType() === 'document') {
           request.continue();
         } else {
           request.abort();
@@ -39,8 +40,8 @@ export class PdfService {
       });
 
       await page.setContent(html, { 
-        waitUntil: 'networkidle0',
-        timeout: 30000
+        waitUntil: 'domcontentloaded',
+        timeout: 10000
       });
 
       // Generate PDF with existing settings

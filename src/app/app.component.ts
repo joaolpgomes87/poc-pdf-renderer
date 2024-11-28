@@ -1,30 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { sampleTranscript } from '../server/mock/sample-transcript';
-import { PdfGenerationService } from './pdf-generation.service';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports:[CommonModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  private pdfService = inject(PdfGenerationService);
-  private sanitizer = inject(DomSanitizer);
-
-  pdfSrc: SafeResourceUrl | null = null;
-  showPdf = false;
-
-
-  async generateServerPdf() {
-    try {
-      const pdfDataUrl = await this.pdfService.generateServerPdf(sampleTranscript);
-      this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(pdfDataUrl);
-      this.showPdf = true;
-    } catch (error) {
-      console.error('Error generating server PDF:', error);
-    }
-  }
+  title = 'pdf-renderer';
 }
